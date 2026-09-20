@@ -5,28 +5,36 @@ import sharp from "sharp";
 const OUT = join(process.cwd(), "public", "icons");
 mkdirSync(OUT, { recursive: true });
 
-const sizes = [
-  { name: "apple-touch-icon.png", size: 180, maskable: false },
-  { name: "icon-192.png", size: 192, maskable: false },
-  { name: "icon-512.png", size: 512, maskable: false },
-  { name: "icon-512-maskable.png", size: 512, maskable: true },
+const YELLOW = "#FFD60A";
+const INK = "#0D0D0D";
+
+const variants = [
+  { suffix: "", bg: YELLOW, fg: INK },
+  { suffix: "-dark", bg: INK, fg: YELLOW },
 ];
 
-function svg(size, maskable) {
-  const pad = maskable ? Math.round(size * 0.1) : 0;
-  const inner = size - pad * 2;
-  const fontSize = Math.round(inner * 0.55);
-  const cx = size / 2;
-  const cy = size / 2 + fontSize * 0.08;
+const sizes = [
+  { name: "apple-touch-icon", size: 180, maskable: false },
+  { name: "icon-192", size: 192, maskable: false },
+  { name: "icon-512", size: 512, maskable: false },
+  { name: "icon-512-maskable", size: 512, maskable: true },
+];
+
+function svg(size, maskable, bg, fg) {
+  // Full-bleed fill — the OS squircle is the shape. Maskable only shrinks the glyph.
+  const glyphScale = maskable ? 0.8 : 1;
+  const fontSize = Math.round(size * 0.3 * glyphScale);
 
   return Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-  <rect width="${size}" height="${size}" fill="#FFF8E7"/>
-  <rect x="${pad + 4}" y="${pad + 4}" width="${inner - 8}" height="${inner - 8}" fill="#FFD60A" stroke="#0D0D0D" stroke-width="${Math.max(4, size * 0.02)}"/>
-  <text x="${cx}" y="${cy}" text-anchor="middle" font-family="Arial Black, sans-serif" font-size="${fontSize}" font-weight="900" fill="#0D0D0D">?</text>
+  <rect width="${size}" height="${size}" fill="${bg}"/>
+  <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-family="Arial Black, Impact, sans-serif" font-size="${fontSize}" font-weight="900" fill="${fg}">wf?</text>
 </svg>`);
 }
 
-for (const { name, size, maskable } of sizes) {
-  await sharp(svg(size, maskable)).png().toFile(join(OUT, name));
-  console.log(`Wrote ${name}`);
+for (const { suffix, bg, fg } of variants) {
+  for (const { name, size, maskable } of sizes) {
+    const filename = `${name}${suffix}.png`;
+    await sharp(svg(size, maskable, bg, fg)).png().toFile(join(OUT, filename));
+    console.log(`Wrote ${filename}`);
+  }
 }

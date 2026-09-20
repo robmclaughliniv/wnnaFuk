@@ -6,8 +6,8 @@ export default function Home() {
           className="comic-outline flex size-48 items-center justify-center rounded-full bg-punch-yellow sm:size-56"
           aria-hidden="true"
         >
-          <span className="font-heading text-[8rem] leading-none text-ink sm:text-[9rem]">
-            ?
+          <span className="font-heading translate-y-[0.06em] text-[5rem] leading-none text-ink sm:text-[5.5rem]">
+            wf?
           </span>
         </div>
         <h1 className="font-heading text-5xl tracking-wide text-ink sm:text-6xl">
