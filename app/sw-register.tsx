@@ -6,6 +6,17 @@ export function ServiceWorkerRegister() {
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
 
+    // Dev server + HMR conflict with SW caching; also clears stale registrations
+    // that cause "script ('Unknown'): Not found" on localhost.
+    if (process.env.NODE_ENV !== "production") {
+      void navigator.serviceWorker
+        .getRegistrations()
+        .then((registrations) =>
+          Promise.all(registrations.map((r) => r.unregister())),
+        );
+      return;
+    }
+
     let reloaded = false;
 
     const reloadOnce = () => {
