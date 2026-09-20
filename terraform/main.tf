@@ -60,6 +60,12 @@ module "site" {
   repo      = "robmclaughliniv/wnnaFuk"
   spa_mode  = false
 
+  # GitHub OIDC sub claim may normalize repo name casing; allow both forms.
+  allowed_oidc_subjects = [
+    "repo:robmclaughliniv/wnnaFuk:*",
+    "repo:robmclaughliniv/wnnafuk:*",
+  ]
+
   # API add-on. Set both to false for a purely static site.
   enable_api      = false
   enable_dynamodb = false
