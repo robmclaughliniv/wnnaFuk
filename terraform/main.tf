@@ -60,10 +60,10 @@ module "site" {
   repo      = "robmclaughliniv/wnnaFuk"
   spa_mode  = false
 
-  # GitHub OIDC sub claim may normalize repo name casing; allow both forms.
+  # GitHub OIDC sub uses owner/repo numeric IDs (e.g. org@30362970/repo@1377741406).
   allowed_oidc_subjects = [
+    "repo:robmclaughliniv@30362970/wnnaFuk@1377741406:*",
     "repo:robmclaughliniv/wnnaFuk:*",
-    "repo:robmclaughliniv/wnnafuk:*",
   ]
 
   # API add-on. Set both to false for a purely static site.
