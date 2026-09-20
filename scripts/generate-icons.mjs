@@ -47,9 +47,25 @@ function buildLabelPath(fontSize) {
   return path;
 }
 
+const PROBE_FONT_SIZE = 100;
+const PADDING_REGULAR = 0.08;
+const PADDING_MASKABLE = 0.1;
+
+function fitFontSize(size, maskable) {
+  const padding = maskable ? PADDING_MASKABLE : PADDING_REGULAR;
+  const target = size * (1 - 2 * padding);
+  const probe = buildLabelPath(PROBE_FONT_SIZE);
+  const bb = probe.getBoundingBox();
+  const scale = Math.min(
+    target / (bb.x2 - bb.x1),
+    target / (bb.y2 - bb.y1),
+  );
+
+  return PROBE_FONT_SIZE * scale;
+}
+
 function glyphPathLayout(size, maskable) {
-  const glyphScale = maskable ? 0.8 : 1;
-  const fontSize = size * 0.3 * glyphScale;
+  const fontSize = fitFontSize(size, maskable);
   const path = buildLabelPath(fontSize);
   const bb = path.getBoundingBox();
 
